@@ -49,6 +49,28 @@ async function run() {
       res.send(result); 
     })
 
+    app.put('/tourspots/:id', async(req,res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)};
+      const newSpot = req.body;
+      const options = { upsert: true };
+      const updateSpot = {
+        $set: {
+          spot_name: newSpot.spot_name,
+          country_name: newSpot.country_name,
+          location: newSpot.location, 
+          image: newSpot.image, 
+          average_cost: newSpot.average_cost, 
+          seasonality: newSpot.seasonality, 
+          travel_duration: newSpot.travel_duration, 
+          totalVisitorsPerYear: newSpot.totalVisitorsPerYear, 
+          description: newSpot.description
+        },
+      };
+      const result = await tourSpotCollection.updateOne(filter, updateSpot, options);
+      res.send(result); 
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
