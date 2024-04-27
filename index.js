@@ -29,6 +29,13 @@ async function run() {
       const result = await tourSpotCollection.find().toArray();
       res.send(result); 
     })
+
+    app.get('/tourspots/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await tourSpotCollection.findOne(query);
+      res.send(result); 
+    })
     app.post('/tourspots', async(req,res)=>{
       const tourSpot = req.body;
       const result = await tourSpotCollection.insertOne(tourSpot);
