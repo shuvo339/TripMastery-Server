@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: ["http://localhost:5173"]
+  origin: ["https://tripmastery-auth.web.app", "http://localhost:5173"]
 }))
 app.use(express.json());
 
@@ -37,6 +37,19 @@ async function run() {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)}
       const result = await tourSpotCollection.findOne(query);
+      res.send(result); 
+    })
+
+    app.get('/tourspots/email/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };  // Search by email
+      const result = await tourSpotCollection.find(query).toArray();
+      res.send(result); 
+    })
+    app.get('/tourspots/country_name/:country_name', async (req, res) => {
+      const country_name = req.params.country_name;
+      const query = { country_name: country_name };  // Search by email
+      const result = await tourSpotCollection.find(query).toArray();
       res.send(result); 
     })
 
