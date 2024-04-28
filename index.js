@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config()
-const app = express()
+require('dotenv').config();
+const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173"]
+}))
 app.use(express.json());
 
 
@@ -25,6 +27,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const tourSpotCollection = client.db('tourismDB').collection('tourSpot');
+    const countryCollection = client.db('tourismDB').collection('country');
     app.get('/tourspots', async(req,res)=>{
       const result = await tourSpotCollection.find().toArray();
       res.send(result); 
@@ -36,6 +39,7 @@ async function run() {
       const result = await tourSpotCollection.findOne(query);
       res.send(result); 
     })
+
     app.post('/tourspots', async(req,res)=>{
       const tourSpot = req.body;
       const result = await tourSpotCollection.insertOne(tourSpot);
@@ -72,8 +76,15 @@ async function run() {
     })
 
 
+
+    // Countries data
+    app.get('/countries', async(req,res)=>{
+      const result = await countryCollection.find().toArray();
+      res.send(result); 
+    })
+
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
